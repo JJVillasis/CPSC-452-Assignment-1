@@ -88,7 +88,6 @@ int main(int argc, char** argv)
 	{
 		string ciphertext = cipher->encrypt(inputText);
 		out << ciphertext;
-
 	}
 	//Decryption process
 	else if(encDec == "DEC")

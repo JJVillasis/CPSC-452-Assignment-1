@@ -5,6 +5,8 @@
 #include <string>   /* For C++ strings */
 #include <stdio.h>  /* For standard I/O */
 #include <stdlib.h> /* For miscellenous C functions */
+#include <cctype>
+#include <ctype.h>
 #include "CipherInterface.h"
 
 using namespace std;
@@ -41,9 +43,18 @@ class Vigenere: public CipherInterface
 		 */
 		virtual string decrypt(const string& ciphertext);
 
+		/**
+		 * Creates a valid key for Vigenere cipher
+		 * @param plaintext - The text used for encryption
+		 * @param key - key being used for encryption
+		 * @return - Return key of correct length
+		 */
+		string createKey(const string& plaintext);
+
 		/* The protected members */
 	protected:
 
+		string cipherKey = "";
 
 };
 
