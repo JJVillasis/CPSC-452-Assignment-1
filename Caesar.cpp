@@ -8,12 +8,18 @@
  */
 bool Caesar::setKey(const string& key)
 {
+	for(int x = 0; x < key.length(); ++x)
+	{
+			if(isalpha(key[x]))
+			{
+				return false;
+			}
+	}
 
-	return false;
+	cipherKey = stoi(key);
+	return true;
+
 }
-
-
-
 
 /**
  * Encrypts a plaintext string
@@ -22,8 +28,18 @@ bool Caesar::setKey(const string& key)
  */
 string Caesar::encrypt(const string& plaintext)
 {
+	string cipher = "";
+	int size = plaintext.length();
+	char temp;
 
-	return "";
+	for(int x = 0; x < size; ++x)
+	{
+		temp = ((tolower(plaintext[x]) + cipherKey) - 97) % 26;
+    temp += 'a';
+    cipher.push_back(temp);
+	}
+
+	return cipher;
 }
 
 /**
@@ -34,5 +50,16 @@ string Caesar::encrypt(const string& plaintext)
 string Caesar::decrypt(const string& cipherText)
 {
 
-	return "";
+	string plaintext = "";
+	int size = cipherText.length();
+	char temp;
+
+	for(int x = 0; x < size; ++x)
+	{
+		temp = (26 + (tolower(cipherText[x]) - cipherKey) - 97) % 26;
+    temp += 'a';
+    plaintext.push_back(temp);
+	}
+
+	return plaintext;
 }
