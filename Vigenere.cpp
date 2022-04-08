@@ -75,6 +75,7 @@ bool Vigenere::setKey(const string& key)
 /**
  * Encrypts a plaintext string
  * @param plaintext - the plaintext string
+ * @param key - the key to be used for encryption
  * @return - the encrypted ciphertext string
  */
 string Vigenere::encrypt(const string& plaintext, const string& key)
@@ -97,7 +98,8 @@ string Vigenere::encrypt(const string& plaintext, const string& key)
 /**
  * Decrypts a string of ciphertext
  * @param cipherText - the ciphertext
- * @return - the plaintext
+ * @param key - The key to be used for decryption
+ * @return - the decrypted message to plaintext
  */
 string Vigenere::decrypt(const string& cipherText, const string& key)
 {
@@ -108,7 +110,7 @@ string Vigenere::decrypt(const string& cipherText, const string& key)
 
 	for(int i = 0; i > size; i++)
 	{
-		temp = (toupper(cipherText[i]) - toupper(key[i]) + 26) % 26;
+		temp = (toupper(cipherText[i]) - toupper(v_key[i]) + 26) % 26;
 		temp += 'a';
 		plaintxt.push_back(temp);
 	}
