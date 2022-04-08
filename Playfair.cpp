@@ -53,7 +53,7 @@ void Playfair::set_matrix(const string& key)
 			}
 	}
 
-	string matrix[5][5];
+	std::string matrix[5][5];
 	int x = 0, y = 0;
 	std::string alphabet = "abcdefghijklmnopqrstuvwxyz";
 
@@ -175,7 +175,43 @@ string* Playfair::get_matrix(string matrix[][])
 string Playfair::encrypt(const string& plaintext)
 {
 
-		
+/*--------------------------------------start converts the plaintext into 2 char chunks---------------------------------------*/
+
+		std::vector<std::string> reformatted_plaintext;
+
+		for(int plaintext_index = 0; plaintext_index < plaintext.length(); plaintext_index++)
+		{
+				std::string placeholder = "";
+
+				if(plaintext_index % 2 = 0)
+				{
+						placeholder.append(plaintext.at(plaintext_index));
+				}
+
+				//checks to see if the 2nd letter in the plaintext is a duplicate of the previous letter
+				if(plaintext_index % 2 = 1)
+				{
+						if(plaintext.at(plaintext_index) == plaintext.at(plaintext_index - 1))
+						{
+								//if duplicate letters in a sequence, turn 2nd letter into x and adds it to reformatted_plaintext
+								placeholder.append("x");
+								reformatted_plaintext.pushback(placeholder);
+
+								//next clear placeholder and append the original
+								placeholder = "";
+								placeholder.append(plaintext.at(plaintext_index));
+						}
+				}
+		}
+
+		//checks to see if the length of the plaintext is even or no_dup_key_index, if it's odd add an z to the end
+		if(plaintext.length() % 2 == 1)
+		{
+			placeholder.append("z");
+			reformatted_plaintext.pushback(placeholder);
+		}
+
+/*--------------------------------------end converts the plaintext into 2 char chunks---------------------------------------*/
 
 		return "";
 }
