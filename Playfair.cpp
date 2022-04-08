@@ -9,7 +9,7 @@
 bool Playfair::setKey(const string& key)
 {
 	//iterates through the key and checks to see if there are invalid characters
-	if((key.find_first_not_of("abcdefghijklmnopqrstuvwxyz") == std::string::npos) == false)
+	if((key.find_first_not_of("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ") == std::string::npos) == false)
 	{
 			return false;
 	}
@@ -17,10 +17,19 @@ bool Playfair::setKey(const string& key)
 	return true;
 }
 
+//run this assuming that the setKey function returns true, meaning that all elements of the key entered
+//is an upper or lowercase_index character
 void Playfair::set_matrix(const string& key)
 {
 	std::string no_dup_key = "";
 	vector<std::string> letter_list;
+
+	//converts all characters to lowercase
+	for(int lowercase_index; lowercase_index < key.length(); lowercase_index++)
+	{
+			if(key.at(lowercase_index) > 64 && key.at(lowercase_index) < 91)
+					key.at(lowercase_index) += 32;
+	}
 
 	//removes duplicates from the key and puts it into no_dup_key
 	for(int key_index = 0; key_index < key.length(); key_index++)
@@ -46,7 +55,7 @@ void Playfair::set_matrix(const string& key)
 
 	string matrix[5][5];
 	int x = 0, y = 0;
-	std::string alphabet = "abcdefghijklmnopqrstuvwxyz"
+	std::string alphabet = "abcdefghijklmnopqrstuvwxyz";
 
 	//for each character no no_dup_key (key with duplicates removed), begins to add it to the playfair matrix
 	for(int no_dup_key_index = 0; no_dup_key_index < no_dup_key.length(); no_dup_key_index++)
@@ -166,8 +175,9 @@ string* Playfair::get_matrix(string matrix[][])
 string Playfair::encrypt(const string& plaintext)
 {
 
+		
 
-	return "";
+		return "";
 }
 
 /**
@@ -179,6 +189,7 @@ string Playfair::decrypt(const string& cipherText)
 {
 
 
-	return "";
+
+		return "";
 
 }
