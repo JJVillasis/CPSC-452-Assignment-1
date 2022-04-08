@@ -48,7 +48,7 @@ string createKey(const string& plaintext, const string& key)
 	bool flag = true;
 	while(flag)
 	{
-		if (sizeOfKey == i)
+		if (key.length() == i)
 		{
 			// If the key is smaller than plaintext reset index
 			i = 0; 
@@ -63,6 +63,7 @@ string createKey(const string& plaintext, const string& key)
 			// Creation of new key
 			newKey.push_back(key[i]);
 		}
+		i++;
 		
 	}
 	return newKey;
