@@ -64,6 +64,11 @@ string Vigenere::createKey(const string& plaintext, const string& key)
  */
 bool Vigenere::setKey(const string& key)
 {	
+	for (int i = 0; i < key.length(); i++)
+	{
+		if (isdigit(key[i]))
+			return false;
+	}
 	return true;
 }
 
