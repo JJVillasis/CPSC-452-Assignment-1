@@ -34,14 +34,14 @@ class Vigenere: public CipherInterface
 		 * @param plaintext - the plaintext string
 		 * @return - the encrypted ciphertext string
 		 */
-		virtual string encrypt(const string& plaintext, const string& key);
+		virtual string encrypt(const string& plaintext);
 
 		/**
 		 * Decrypts a string of ciphertext
 		 * @param ciphertext - the ciphertext
 		 * @return - the plaintext
 		 */
-		virtual string decrypt(const string& ciphertext, const string& key);
+		virtual string decrypt(const string& ciphertext);
 
 		/**
 		 * Creates a valid key for Vigenere cipher
@@ -49,12 +49,13 @@ class Vigenere: public CipherInterface
 		 * @param key - key being used for encryption
 		 * @return - Return key of correct length
 		 */
-		string createKey(const string& plaintext, const string& key);
+		string createKey(const string& plaintext);
 
 		/* The protected members */
 	protected:
-	
-	
+
+		string cipherKey = "";
+
 };
 
 #endif

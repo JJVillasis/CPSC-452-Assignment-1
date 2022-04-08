@@ -1,16 +1,17 @@
 #include "Vigenere.h"
+#include <iostream>
 
 
 /*
-Encryption = (s[i] + k[i]) % 26 
+Encryption = (s[i] + k[i]) % 26
 Decryption = (s[i] - k[i] + 26) % 26
 
-References used: 
+References used:
 https://en.wikipedia.org/wiki/Vigen%C3%A8re_cipher
 - to get encryption / decryption algorithm
 
 https://www.daniweb.com/programming/software-development/threads/76843/outputting-integers-as-letters-of-the-alphabet
-- convert to alphabet 
+- convert to alphabet
 */
 
 /**
@@ -19,40 +20,40 @@ https://www.daniweb.com/programming/software-development/threads/76843/outputtin
  * @param key - key being used for encryption
  * @return - Return key of correct length
  */
-string Vigenere::createKey(const string& plaintext, const string& key)
+string Vigenere::createKey(const string& plaintext)
 {
 	int sizeOfKey = plaintext.length();
-	if (sizeOfKey != key.length())
+	if (sizeOfKey != cipherKey.length())
 	{
 		string newKey = "";
 		int i = 0;
 		bool flag = true;
 		while(flag)
 		{
-			if (key.length() == i)
+			if (cipherKey.length() == i)
 			{
 				// If the key is smaller than plaintext reset index
-				i = 0; 
+				i = 0;
 			}
 			if (newKey.length() == sizeOfKey)
 			{
-				// Set flag to false to exit the loop 
+				// Set flag to false to exit the loop
 				flag = false;
 			}
 			else
 			{
 				// Creation of new key
-				newKey.push_back(key[i]);
+				newKey.push_back(cipherKey[i]);
 			}
 			i++;
-			
+
 		}
 		return newKey;
 
 	}
 	else	// The key and plaintext length match
 	{
-		return key;
+		return cipherKey;
 	}
 }
 
@@ -63,12 +64,13 @@ string Vigenere::createKey(const string& plaintext, const string& key)
  * Create a valid key or if length of key matches plaintext key is valid
  */
 bool Vigenere::setKey(const string& key)
-{	
+{
 	for (int i = 0; i < key.length(); i++)
 	{
 		if (isdigit(key[i]))
 			return false;
 	}
+	cipherKey = key;
 	return true;
 }
 
@@ -78,16 +80,16 @@ bool Vigenere::setKey(const string& key)
  * @param key - the key to be used for encryption
  * @return - the encrypted ciphertext string
  */
-string Vigenere::encrypt(const string& plaintext, const string& key)
+string Vigenere::encrypt(const string& plaintext)
 {
 	string cipher = "";
 	int size = plaintext.length();
 	char temp;
-	string v_key = createKey(plaintext, key);
+	cipherKey = createKey(plaintext);
 
 	for(int i = 0; i < size; i++)
 	{
-		temp = (toupper(plaintext[i]) + toupper(v_key[i])) %26;
+		temp = (toupper(plaintext[i]) + toupper(cipherKey[i])) %26;
 		temp += 'a';
 		cipher.push_back(temp);
 	}
@@ -101,16 +103,16 @@ string Vigenere::encrypt(const string& plaintext, const string& key)
  * @param key - The key to be used for decryption
  * @return - the decrypted message to plaintext
  */
-string Vigenere::decrypt(const string& cipherText, const string& key)
+string Vigenere::decrypt(const string& cipherText)
 {
 	int size = cipherText.length();
 	string plaintxt = "";
 	char temp;
-	string v_key = createKey(plaintxt, key);
+	cipherKey = createKey(cipherText);
 
-	for(int i = 0; i > size; i++)
+	for(int i = 0; i < size; i++)
 	{
-		temp = (toupper(cipherText[i]) - toupper(v_key[i]) + 26) % 26;
+		temp = (toupper(cipherText[i]) - toupper(cipherKey[i]) + 26) % 26;
 		temp += 'a';
 		plaintxt.push_back(temp);
 	}
