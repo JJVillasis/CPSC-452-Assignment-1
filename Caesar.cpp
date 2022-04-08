@@ -21,9 +21,6 @@ bool Caesar::setKey(const string& key)
 
 }
 
-
-
-
 /**
  * Encrypts a plaintext string
  * @param plaintext - the plaintext string
@@ -31,8 +28,18 @@ bool Caesar::setKey(const string& key)
  */
 string Caesar::encrypt(const string& plaintext)
 {
+	string cipher = "";
+	int size = plaintext.length();
+	char temp;
 
-	return "";
+	for(int x = 0; x < size; ++x)
+	{
+		temp = ((tolower(plaintext[x]) + 3) - 97) % 26;
+    temp += 'a';
+    cipher.push_back(temp);
+	}
+
+	return cipher;
 }
 
 /**
@@ -43,5 +50,16 @@ string Caesar::encrypt(const string& plaintext)
 string Caesar::decrypt(const string& cipherText)
 {
 
-	return "";
+	string plaintext = "";
+	int size = cipherText.length();
+	char temp;
+
+	for(int x = 0; x < size; ++x)
+	{
+		temp = (26 + (tolower(cipherText[x]) - 3) - 97) % 26;
+    temp += 'a';
+    plaintext.push_back(temp);
+	}
+
+	return plaintext;
 }
