@@ -34,7 +34,7 @@ string Caesar::encrypt(const string& plaintext)
 
 	for(int x = 0; x < size; ++x)
 	{
-		temp = ((tolower(plaintext[x]) + 3) - 97) % 26;
+		temp = ((tolower(plaintext[x]) + cipherKey) - 97) % 26;
     temp += 'a';
     cipher.push_back(temp);
 	}
@@ -56,7 +56,7 @@ string Caesar::decrypt(const string& cipherText)
 
 	for(int x = 0; x < size; ++x)
 	{
-		temp = (26 + (tolower(cipherText[x]) - 3) - 97) % 26;
+		temp = (26 + (tolower(cipherText[x]) - cipherKey) - 97) % 26;
     temp += 'a';
     plaintext.push_back(temp);
 	}
