@@ -1,5 +1,6 @@
 #include "Vigenere.h"
 #include <cctype>
+#include <iostream>
 
 /*
 Encryption = (s[i] + k[i]) % 26 
@@ -14,30 +15,29 @@ https://www.daniweb.com/programming/software-development/threads/76843/outputtin
 */
 
 /**
- * Sets the key to use
- * @param key - the key to use
- * @return - True if the key is valid and False otherwise
+ * The default constructor
  */
-bool Vigenere::setKey(const string& key)
+Vigenere::Vigenere()
 {
-	if (key.length() > 0)
-	{
-		return true;
-	}
-	else
-	{
-		return false; 
-	}
-	
-	
+	v_key = "";
+}
+
+/**
+ * Return the key
+ * @return - Return the protected member v_key value
+ */
+string Vigenere::getKey()
+{
+	return v_key;
 }
 
 /**
  * Sets the key to use
  * @param key - the key to use
- * @return - the key of correct length
+ * @param plaintext - the plaintext string
+ * Create a valid key or if length of key matches plaintext key is valid
  */
-string createKey(const string& plaintext, const string& key)
+void Vigenere::setKey(const string& plaintext, const string& key)
 {
 	int sizeOfKey = plaintext.length();
 	
@@ -67,15 +67,16 @@ string createKey(const string& plaintext, const string& key)
 		i++;
 		
 	}
-	return newKey;
+	v_key = newKey;
 
 	}
 	else	// The key and plaintext lenght match
 	{
-		return key;
+		v_key = key;
 	}
+	
+	
 }
-
 
 /**
  * Encrypts a plaintext string
