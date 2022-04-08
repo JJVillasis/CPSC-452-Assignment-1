@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include <string>
 #include "CipherInterface.h"
 #include "Playfair.h"
@@ -10,7 +11,7 @@ using namespace std;
 
 int main(int argc, char** argv)
 {
-	// Parsing Command Line Arguments //
+	//// Parsing Command Line Arguments ////
 
 	string cipherName = argv[1];
 	string key = argv[2];
@@ -19,8 +20,33 @@ int main(int argc, char** argv)
 	string outputFile = argv[5];
 
 
-	// Handling Cipher Interface //
+	//// Reading the File ////
 
+	//Input and output files
+	ifstream in (inputFile);
+	ofstream out;
+	out.open(outputFile);
+
+	//Text from input file
+	string inputText;
+
+	//Check if file can be opened
+	if(in.is_open())
+	{
+		//Read text from the input file
+		getline(in, inputText);
+	}
+
+	else
+	{
+		cout << "Unable to open file \"" << inputFile << "\". File Does not exist.\n";
+		exit(1);
+	}
+
+
+	//// Handling Cipher Interface ////
+
+	// Interface Class
 	CipherInterface* cipher = NULL;
 
 	//If the Cipher is Playfair
@@ -55,17 +81,19 @@ int main(int argc, char** argv)
 	}
 
 
-	// Performing the Encryption/Decryption //
+	//// Performing the Encryption/Decryption ////
 
 	//Encryption process
 	if(encDec == "ENC")
 	{
-
+		string ciphertext = cipher->encrypt(inputText);
+		out << ciphertext;
 	}
 	//Decryption process
 	else if(encDec == "DEC")
 	{
-
+		string plaintext = cipher->decrypt(inputText);
+		out << plaintext;
 	}
 	//Unknown process
 	else
@@ -74,6 +102,10 @@ int main(int argc, char** argv)
 		exit(1);
 	}
 
+	//// Close files ////
+
+	in.close();
+	out.close();
 
 	return 0;
 }
