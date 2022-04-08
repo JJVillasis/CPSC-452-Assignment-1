@@ -2,11 +2,11 @@
 
 ## Group Members
 
-Benjamin Ahn
+Benjamin Ahn - benahn333@csu.fullerton.edu
 
-Lyba Batla  
+Lyba Batla
 
-Casey Thatsanaphonh  
+Casey Thatsanaphonh - cthatsanaphonh@csu.Fullerton.edu
 
 Joshua Villasis - JJVillasis@csu.fullerton.edu  
 
