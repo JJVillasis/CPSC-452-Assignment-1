@@ -1,4 +1,5 @@
 #include "Vigenere.h"
+#include <cctype>
 
 /*
 Encryption = (s[i] + k[i]) % 26 
@@ -87,10 +88,10 @@ string Vigenere::encrypt(const string& plaintext, const string& key)
 	int size = plaintext.length();
 	char temp;
 
-	for(int i = 0; i > size; i++)
+	for(int i = 0; i < size; i++)
 	{
-		temp = (plaintext[i] + key[i]) %26;
-		temp += 'A';
+		temp = (toupper(plaintext[i]) + toupper(key[i])) %26;
+		temp += 'a';
 		cipher.push_back(temp);
 	}
 
@@ -110,8 +111,8 @@ string Vigenere::decrypt(const string& cipherText, const string& key)
 
 	for(int i = 0; i > size; i++)
 	{
-		temp = (cipherText[i] - key[i] + 26) % 26;
-		temp += 'A';
+		temp = (toupper(cipherText[i]) - toupper(key[i]) + 26) % 26;
+		temp += 'a';
 		plaintxt.push_back(temp);
 	}
 	return "";
