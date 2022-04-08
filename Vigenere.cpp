@@ -114,8 +114,3 @@ string Vigenere::decrypt(const string& cipherText, const string& key)
 	}
 	return plaintxt;
 }
-
-int main()
-{
-	return 0;
-}
