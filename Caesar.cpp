@@ -8,8 +8,17 @@
  */
 bool Caesar::setKey(const string& key)
 {
+	for(int x = 0; x < key.length(); ++x)
+	{
+			if(isalpha(key[x]))
+			{
+				return false;
+			}
+	}
 
-	return false;
+	cipherKey = stoi(key);
+	return true;
+
 }
 
 
