@@ -4,7 +4,7 @@
 
 Benjamin Ahn - benahn333@csu.fullerton.edu
 
-Lyba Batla
+Lyba Batla - lybabatla@csu.fullerton.edu
 
 Casey Thatsanaphonh - cthatsanaphonh@csu.Fullerton.edu
 
