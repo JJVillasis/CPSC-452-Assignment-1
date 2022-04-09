@@ -11,7 +11,7 @@ bool Playfair::setKey(const string& key)
 	//iterates through the key and checks to see if there are invalid characters
 	for(int set_key_index = 0; set_key_index < key.length(); set_key_index++)
 	{
-  		if(!isalpha(key[x]))
+  		if(!isalpha(key[set_key_index]))
   		{
 	    return false;
 	  	}
@@ -180,24 +180,24 @@ string Playfair::encrypt(const string& plaintext)
 /*--------------------------------------start converts the plaintext into 2 char chunks---------------------------------------*/
 
 		vector<string> reformatted_plaintext;
+		string placeholder = "";
 
 		for(int plaintext_index = 0; plaintext_index < plaintext.length(); plaintext_index++)
 		{
-				string placeholder = "";
 
-				if(plaintext_index % 2 = 0)
+				if(plaintext_index % 2 == 0)
 				{
 						placeholder.append(plaintext.at(plaintext_index));
 				}
 
 				//checks to see if the 2nd letter in the plaintext is a duplicate of the previous letter
-				if(plaintext_index % 2 = 1)
+				if(plaintext_index % 2 == 1)
 				{
 						if(plaintext.at(plaintext_index) == plaintext.at(plaintext_index - 1))
 						{
 								//if duplicate letters in a sequence, turn 2nd letter into x and adds it to reformatted_plaintext
 								placeholder.append("x");
-								reformatted_plaintext.pushback(placeholder);
+								reformatted_plaintext.push_back(placeholder);
 
 								//next clear placeholder and append the original
 								placeholder = "";
@@ -206,11 +206,11 @@ string Playfair::encrypt(const string& plaintext)
 				}
 		}
 
-		//checks to see if the length of the plaintext is even or no_dup_key_index, if it's odd add an z to the end
+		//checks to see if the length of the plaintext is even or no_dup_key_index, if it's odd add an x to the end
 		if(plaintext.length() % 2 == 1)
 		{
-			placeholder.append("z");
-			reformatted_plaintext.pushback(placeholder);
+			placeholder.append("x");
+			reformatted_plaintext.push_back(placeholder);
 		}
 
 /*--------------------------------------end converts the plaintext into 2 char chunks---------------------------------------*/
@@ -283,7 +283,7 @@ string Playfair::encrypt(const string& plaintext)
 string Playfair::decrypt(const string& cipherText)
 {
 
-		int x_1 = 0, y_2 = 0, x_2 = 0, y_2 = 0;
+		int x_1 = 0, y_1 = 0, x_2 = 0, y_2 = 0;
 		int search_row = 0, search_column = 0;
 		string plain_text = "";
 
@@ -293,6 +293,7 @@ string Playfair::decrypt(const string& cipherText)
 				//for odd index to represent the end of the block
 				if(cipher_text_index % 2 == 0)
 				{
+
 						if(playfair_matrix[search_row][search_column] == cipherText.at(cipher_text_index).at(cipher_text_index))
 						{
 								x_1 = search_row;
