@@ -1,5 +1,4 @@
 #include "Playfair.h"
-#include <iostream>
 
 
 /**
@@ -272,7 +271,6 @@ string Playfair::encrypt(const string& plaintext)
 				cipher_text += playfair_matrix[x_1][y_2];
 		}
 /*----------------------------------------end plaintext to ciphertext conversion via matrix---------------------------------*/
-		cout << cipher_text << endl;
 		return cipher_text;
 }
 
