@@ -40,7 +40,7 @@ class Playfair: public CipherInterface
 		/*
 		returns the playfair_matrix
 		*/
-		virtual string* get_matrix();
+		//virtual string** get_matrix();
 
 		/**
 		 * Encrypts a plaintext string
