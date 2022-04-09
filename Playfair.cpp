@@ -9,10 +9,13 @@
 bool Playfair::setKey(const string& key)
 {
 	//iterates through the key and checks to see if there are invalid characters
-	if((key.find_first_not_of("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ") == std::string::npos) == false)
+	for(int set_key_index = 0; set_key_index < key.length(); set_key_index++)
 	{
-			return false;
-	}
+  		if(!isalpha(key[x]))
+  		{
+	    return false;
+	  	}
+}
 
 	return true;
 }
@@ -21,14 +24,13 @@ bool Playfair::setKey(const string& key)
 //is an upper or lowercase_index character
 void Playfair::set_matrix(const string& key)
 {
-	std::string no_dup_key = "";
-	vector<std::string> letter_list;
+	string no_dup_key = "";
+	vector<string> letter_list;
 
 	//converts all characters to lowercase
 	for(int lowercase_index; lowercase_index < key.length(); lowercase_index++)
 	{
-			if(key.at(lowercase_index) > 64 && key.at(lowercase_index) < 91)
-					key.at(lowercase_index) += 32;
+			key[index] = tolower(key[index]);
 	}
 
 	//removes duplicates from the key and puts it into no_dup_key
@@ -53,9 +55,9 @@ void Playfair::set_matrix(const string& key)
 			}
 	}
 
-	std::string matrix[5][5];
+	string matrix[5][5];
 	int x = 0, y = 0;
-	std::string alphabet = "abcdefghijklmnopqrstuvwxyz";
+	string alphabet = "abcdefghijklmnopqrstuvwxyz";
 
 	//for each character no no_dup_key (key with duplicates removed), begins to add it to the playfair matrix
 	for(int no_dup_key_index = 0; no_dup_key_index < no_dup_key.length(); no_dup_key_index++)
@@ -69,8 +71,8 @@ void Playfair::set_matrix(const string& key)
 							matrix[x][y] = "i/j";
 							x++;
 
-							alphabet.erase(std::remove(alphabet.begin(), alphabet.end(), "i"), alphabet.end());
-							alphabet.erase(std::remove(alphabet.begin(), alphabet.end(), "j"), alphabet.end());
+							alphabet.erase(remove(alphabet.begin(), alphabet.end(), "i"), alphabet.end());
+							alphabet.erase(remove(alphabet.begin(), alphabet.end(), "j"), alphabet.end());
 
 							continue;
 					}
@@ -79,7 +81,7 @@ void Playfair::set_matrix(const string& key)
 					x++;
 
 					//removes character appended to the matrix from the alphabet
-					alphabet.erase(std::remove(alphabet.begin(), alphabet.end(), no_dup_key.at(no_dup_key_index)), alphabet.end());
+					alphabet.erase(remove(alphabet.begin(), alphabet.end(), no_dup_key.at(no_dup_key_index)), alphabet.end());
 			}
 
 			//if there is no space in the current row of the matrix, moves down one row, resets the column index
@@ -92,8 +94,8 @@ void Playfair::set_matrix(const string& key)
 							y++;
 							x = 0;
 
-							alphabet.erase(std::remove(alphabet.begin(), alphabet.end(), "i"), alphabet.end());
-							alphabet.erase(std::remove(alphabet.begin(), alphabet.end(), "j"), alphabet.end());
+							alphabet.erase(remove(alphabet.begin(), alphabet.end(), "i"), alphabet.end());
+							alphabet.erase(remove(alphabet.begin(), alphabet.end(), "j"), alphabet.end());
 
 							continue;
 					}
@@ -103,7 +105,7 @@ void Playfair::set_matrix(const string& key)
 					x = 0;
 
 					//removes character appended to the matrix from the alphabet
-					alphabet.erase(std::remove(alphabet.begin(), alphabet.end(), no_dup_key.at(no_dup_key_index)), alphabet.end());
+					alphabet.erase(remove(alphabet.begin(), alphabet.end(), no_dup_key.at(no_dup_key_index)), alphabet.end());
 			}
 		}
 
@@ -118,8 +120,8 @@ void Playfair::set_matrix(const string& key)
 								matrix[x][y] = "i/j";
 								x++;
 
-								alphabet.erase(std::remove(alphabet.begin(), alphabet.end(), "i"), alphabet.end());
-								alphabet.erase(std::remove(alphabet.begin(), alphabet.end(), "j"), alphabet.end());
+								alphabet.erase(remove(alphabet.begin(), alphabet.end(), "i"), alphabet.end());
+								alphabet.erase(remove(alphabet.begin(), alphabet.end(), "j"), alphabet.end());
 
 								continue;
 						}
@@ -127,7 +129,7 @@ void Playfair::set_matrix(const string& key)
 						matrix[x][y] = alphabet.at(alphabet_index);
 						x++;
 
-						alphabet.erase(std::remove(alphabet.begin(), alphabet.end(), alphabet.at(alphabet_index)), alphabet.end());
+						alphabet.erase(remove(alphabet.begin(), alphabet.end(), alphabet.at(alphabet_index)), alphabet.end());
 				}
 
 				if(x == 5)
@@ -139,8 +141,8 @@ void Playfair::set_matrix(const string& key)
 								y++;
 								x = 0;
 
-								alphabet.erase(std::remove(alphabet.begin(), alphabet.end(), "i"), alphabet.end());
-								alphabet.erase(std::remove(alphabet.begin(), alphabet.end(), "j"), alphabet.end());
+								alphabet.erase(remove(alphabet.begin(), alphabet.end(), "i"), alphabet.end());
+								alphabet.erase(remove(alphabet.begin(), alphabet.end(), "j"), alphabet.end());
 
 								continue;
 						}
@@ -150,7 +152,7 @@ void Playfair::set_matrix(const string& key)
 						x = 0;
 
 						//removes character appended to the matrix from the alphabet
-						alphabet.erase(std::remove(alphabet.begin(), alphabet.end(), alphabet.at(alphabet_index)), alphabet.end());
+						alphabet.erase(remove(alphabet.begin(), alphabet.end(), alphabet.at(alphabet_index)), alphabet.end());
 				}
 
 		}
@@ -177,11 +179,11 @@ string Playfair::encrypt(const string& plaintext)
 
 /*--------------------------------------start converts the plaintext into 2 char chunks---------------------------------------*/
 
-		std::vector<std::string> reformatted_plaintext;
+		vector<string> reformatted_plaintext;
 
 		for(int plaintext_index = 0; plaintext_index < plaintext.length(); plaintext_index++)
 		{
-				std::string placeholder = "";
+				string placeholder = "";
 
 				if(plaintext_index % 2 = 0)
 				{
@@ -213,7 +215,64 @@ string Playfair::encrypt(const string& plaintext)
 
 /*--------------------------------------end converts the plaintext into 2 char chunks---------------------------------------*/
 
-		return "";
+/*--------------------------------------start plaintext to ciphertext conversion via matrix---------------------------------*/
+
+		int x_1 = 0, y_1 = 0, x_2 = 0, y_2 = 0;
+		int search_row = 0, search_column = 0;
+		string cipher_text = "";
+
+		for(int vector_index = 0; vector_index < reformatted_plaintext.size(); vector_index++)
+		{
+				//searches for the location of the first character of the block in the matrix
+				if(playfair_matrix[search_row][search_column] == reformatted_plaintext.at(vector_index)).at(0))
+				{
+						x_1 = search_row;
+						y_1 = search_column;
+				}
+				if(playfair_matrix[search_row][search_column] != reformatted_plaintext.at(vector_index)).at(0))
+				{
+						if(search_column == 5)
+						{
+								search_column = 0;
+								search_row++;
+						}
+						if(search_column < 5)
+						{
+								search_column++;
+						}
+				}
+
+				search_row = 0;
+				search_column = 0;
+
+				//searches for the location of the second character of the block in the matrix
+				if(playfair_matrix[search_row][search_column] == reformatted_plaintext.at(vector_index).at(1))
+				{
+						x_2 = search_row;
+						y_2 = search_column;
+				}
+				if(playfair_matrix[search_row][search_column] != reformatted_plaintext.at(vector_index).at(1))
+				{
+						if(search_column == 5)
+						{
+								search_column = 0;
+								search_row++;
+						}
+						if(search_column < 5)
+						{
+								search_column++;
+						}
+				}
+
+				search_row = 0;
+				search_column = 0;
+
+				cipher_text.append(playfair_matrix[x_2][y_1]);
+				cipher_text.append(playfair_matrix[x_1][y_2]);
+		}
+/*----------------------------------------end plaintext to ciphertext conversion via matrix---------------------------------*/
+
+		return cipher_text;
 }
 
 /**
@@ -224,8 +283,66 @@ string Playfair::encrypt(const string& plaintext)
 string Playfair::decrypt(const string& cipherText)
 {
 
+		int x_1 = 0, y_2 = 0, x_2 = 0, y_2 = 0;
+		int search_row = 0, search_column = 0;
+		string plain_text = "";
 
+		for(int cipher_text_index = 0; cipher_text_index < cipherText.size(); cipher_text_index++)
+		{
 
-		return "";
+				//for odd index to represent the end of the block
+				if(cipher_text_index % 2 == 0)
+				{
+						if(playfair_matrix[search_row][search_column] == cipherText.at(cipher_text_index).at(cipher_text_index))
+						{
+								x_1 = search_row;
+								y_1 = search_column;
+						}
+						if(playfair_matrix[search_row][search_column] != cipherText.at(cipher_text_index).at(cipher_text_index))
+						{
+								if(search_column == 5)
+								{
+										search_column = 0;
+										search_row++;
+								}
+								if(search_column < 5)
+								{
+										search_column++;
+								}
+						}
+				}
 
+				search_row = 0;
+				search_column = 0;
+
+				//for even index to represent the end of the block
+				if(cipher_text_index % 2 == 1)
+				{
+						if(playfair_matrix[search_row][search_column] == cipherText.at(cipher_text_index).at(cipher_text_index))
+						{
+								x_2 = search_row;
+								y_2 = search_column;
+						}
+						if(playfair_matrix[search_row][search_column] != cipherText.at(cipher_text_index).at(cipher_text_index))
+						{
+								if(search_column == 5)
+								{
+										search_column = 0;
+										search_row++;
+								}
+								if(search_column < 5)
+								{
+										search_column++;
+								}
+						}
+				}
+
+				search_row = 0;
+				search_column = 0;
+
+				plain_text.append(playfair_matrix[x_2][y_1]);
+				plain_text.append(playfair_matrix[x_1][y_2]);
+		}
+
+		return plain_text;
 }
