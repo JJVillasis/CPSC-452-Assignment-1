@@ -10,7 +10,7 @@ Casey Thatsanaphonh - cthatsanaphonh@csu.Fullerton.edu
 
 Joshua Villasis - JJVillasis@csu.fullerton.edu  
 
-Evan Wu
+Evan Wu - Evanh.wu@csu.fullerton.edu
 
 ## Programming Language 
 
