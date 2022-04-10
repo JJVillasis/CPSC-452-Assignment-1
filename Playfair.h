@@ -5,13 +5,14 @@
 #include <string>   /* For C++ strings */
 #include <stdio.h>  /* For standard I/O */
 #include <stdlib.h> /* For miscellenous C functions */
+#include <array>
 #include "CipherInterface.h"
 
 using namespace std;
 
 /**
  * This class implements the playfair cipher.
- * The class extends the abstract class 
+ * The class extends the abstract class
  * CipherInterface.
  */
 
@@ -20,6 +21,9 @@ class Playfair: public CipherInterface
 	/** The public members **/
 	public:
 
+		std::string cipherKey;
+		std::string playfair_matrix[5][5];
+
 		/**
 		 * Sets the key to use
 		 * @param key - the key to use
@@ -27,7 +31,13 @@ class Playfair: public CipherInterface
 		 */
 		virtual bool setKey(const string& key);
 
-		/**	
+		/*
+		takes the key provided and removes duplicates and then fills out the playfair matrix
+		*/
+
+		virtual void set_matrix(const string& key);
+
+		/**
 		 * Encrypts a plaintext string
 		 * @param plaintext - the plaintext string
 		 * @return - the encrypted ciphertext string
@@ -40,16 +50,16 @@ class Playfair: public CipherInterface
 		 * @return - the plaintext
 		 */
 		virtual string decrypt(const string& ciphertext);
-			
+
 		/**
 		 * Prints the Playfair matrix
 		 * @param fp - the file pointer
 		 */
 		void printMatrix(FILE* fp);
-		
+
 		/* The protected members */
 	protected:
-	
+
 
 };
 
