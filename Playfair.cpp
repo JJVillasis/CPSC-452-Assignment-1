@@ -123,8 +123,7 @@ void Playfair::set_matrix(const string& key)
 				matrix[row][col] = "i/j";
 				col++;
 
-				alphabet.erase(alphabet.find("i", 1));
-				alphabet.erase(alphabet.find("j", 1));
+				alphabet.erase(0, 2);
 			}
 
 			else
@@ -132,7 +131,7 @@ void Playfair::set_matrix(const string& key)
 				matrix[row][col] = alphabet[0];
 				col++;
 
-				alphabet.erase(alphabet.find(alphabet[0]),1);
+				alphabet.erase(0,1);
 			}
 		}
 
@@ -148,22 +147,21 @@ void Playfair::set_matrix(const string& key)
 					matrix[row][col] = "i/j";
 					col++;
 
-					alphabet.erase(alphabet.find("i", 1));
-					alphabet.erase(alphabet.find("j", 1));
+					alphabet.erase(0, 2);
 			}
 
 			else
 			{
 				matrix[row][col] = alphabet[0];
 				col++;
-			}
 
-			//removes character appended to the matrix from the alphabet
-			alphabet.erase(alphabet.find(alphabet[0]),1);
+				//removes character appended to the matrix from the alphabet
+				alphabet.erase(0,1);
+			}
 		}
 	}
 
-	copy(&playfair_matrix[0][0], &playfair_matrix[0][0] + 5 * 5, &matrix[0][0]);
+	copy(&matrix[0][0], &matrix[0][0] + 5 * 5, &playfair_matrix[0][0]);
 }
 
 /**
@@ -179,37 +177,62 @@ string Playfair::encrypt(const string& plaintext)
 		vector<string> reformatted_plaintext;
 		string placeholder = "";
 
-		// ee
-
 		for(int plaintext_index = 0; plaintext_index < plaintext.length(); plaintext_index++)
 		{
-
-				if(placeholder.length() % 2 == 0)
+			if(placeholder.length() % 2 == 0)
+			{
+				if(plaintext.substr(plaintext_index, 3).compare("i/j") == 0)
 				{
-						placeholder += plaintext[plaintext_index];
+					placeholder += "i";
+					plaintext_index += 2;
+				}
+				else
+					placeholder += plaintext[plaintext_index];
+			}
+
+			//checks to see if the 2nd letter in the plaintext is a duplicate of the previous letter
+			else
+			{
+				if(plaintext.substr(plaintext_index, 3).compare("i/j") == 0)
+				{
+					if(plaintext[plaintext_index] == plaintext[plaintext_index - 1])
+					{
+							//if duplicate letters in a sequence, turn 2nd letter into x and adds it to reformatted_plaintext
+							placeholder.append("x");
+							reformatted_plaintext.push_back(placeholder);
+
+							//next clear placeholder and append the original
+							placeholder = "";
+							placeholder += "i";
+							plaintext_index += 2;
+					}
+
+					else
+						placeholder += "i";
+						plaintext_index += 2;
 				}
 
-				//checks to see if the 2nd letter in the plaintext is a duplicate of the previous letter
 				else
 				{
-						if(plaintext[plaintext_index] == plaintext[plaintext_index - 1])
-						{
-								//if duplicate letters in a sequence, turn 2nd letter into x and adds it to reformatted_plaintext
-								placeholder.append("x");
-								reformatted_plaintext.push_back(placeholder);
-
-								//next clear placeholder and append the original
-								placeholder = "";
-								placeholder += plaintext[plaintext_index];
-						}
-
-						else
-						{
-							placeholder += plaintext[plaintext_index];
+					if(plaintext[plaintext_index] == plaintext[plaintext_index - 1])
+					{
+							//if duplicate letters in a sequence, turn 2nd letter into x and adds it to reformatted_plaintext
+							placeholder.append("x");
 							reformatted_plaintext.push_back(placeholder);
+
+							//next clear placeholder and append the original
 							placeholder = "";
-						}
+							placeholder += plaintext[plaintext_index];
+					}
+
+					else
+					{
+						placeholder += plaintext[plaintext_index];
+						reformatted_plaintext.push_back(placeholder);
+						placeholder = "";
+					}
 				}
+			}
 		}
 
 		//checks to see if the length of the plaintext is even or no_dup_key_index, if it's odd add an x to the end
@@ -219,72 +242,79 @@ string Playfair::encrypt(const string& plaintext)
 			reformatted_plaintext.push_back(placeholder);
 		}
 
-		for(int x = 0; x < reformatted_plaintext.size(); ++x)
-		{
-			cout << reformatted_plaintext[x] << endl;
-		}
-
-		return "";
-
 /*--------------------------------------end converts the plaintext into 2 char chunks---------------------------------------*/
 
 /*--------------------------------------start plaintext to ciphertext conversion via matrix---------------------------------*/
-/*
-		int x_1 = 0, y_1 = 0, x_2 = 0, y_2 = 0;
-		int search_row = 0, search_column = 0;
+
+		int row_1 = 0, col_1 = 0, row_2 = 0, col_2 = 0;
 		string cipher_text = "";
 
 		for(int vector_index = 0; vector_index < reformatted_plaintext.size(); vector_index++)
 		{
-				//searches for the location of the first character of the block in the matrix
-				if(playfair_matrix[search_row][search_column].compare(reformatted_plaintext[vector_index].substr(0,1)))
+			for(int mRow = 0; mRow < 5; ++mRow)
+			{
+				for(int mCol = 0; mCol < 5; ++mCol)
 				{
-						x_1 = search_row;
-						y_1 = search_column;
+					if(playfair_matrix[mRow][mCol].compare("i/j") == 0)
+					{
+						if(reformatted_plaintext[vector_index][0] == 'i' || reformatted_plaintext[vector_index][0] == 'j')
+						{
+							row_1 = mRow;
+							col_1 = mCol;
+						}
+					}
+
+					else if(playfair_matrix[mRow][mCol].compare(reformatted_plaintext[vector_index].substr(0,1)) == 0)
+					{
+							row_1 = mRow;
+							col_1 = mCol;
+					}
 				}
-				else
+			}
+
+			//searches for the location of the second character of the block in the matrix
+			for(int mRow = 0; mRow < 5; ++mRow)
+			{
+				for(int mCol = 0; mCol < 5; ++mCol)
 				{
-						if(search_column == 5)
+
+					if(playfair_matrix[mRow][mCol].compare("i/j") == 0)
+					{
+						if(reformatted_plaintext[vector_index][1] == 'i' || reformatted_plaintext[vector_index][1] == 'j')
 						{
-								search_column = 0;
-								search_row++;
+							row_2 = mRow;
+							col_2 = mCol;
 						}
-						else if(search_column < 5)
-						{
-								search_column++;
-						}
+					}
+
+					else if(playfair_matrix[mRow][mCol].compare(reformatted_plaintext[vector_index].substr(1)) == 0)
+					{
+							row_2 = mRow;
+							col_2 = mCol;
+					}
 				}
+			}
 
-				search_row = 0;
-				search_column = 0;
-
-				//searches for the location of the second character of the block in the matrix
-				if(playfair_matrix[search_row][search_column].compare(reformatted_plaintext[vector_index].substr(1)) == 0)
-				{
-						x_2 = search_row;
-						y_2 = search_column;
-				}
-				else
-				{
-						if(search_column == 5)
-						{
-								search_column = 0;
-								search_row++;
-						}
-						else if(search_column < 5)
-						{
-								search_column++;
-						}
-				}
-
-				search_row = 0;
-				search_column = 0;
-
-				cipher_text += playfair_matrix[x_2][y_1];
-				cipher_text += playfair_matrix[x_1][y_2];
+			//If both letters fall into the same ROW
+			if(row_1 == row_2)
+	    {
+        cipher_text += playfair_matrix[row_1][(col_1+1) % 5];
+	      cipher_text += playfair_matrix[row_2][(col_2+1) % 5];
+	    }
+			//If both letters fall into the same COL
+			else if(col_1 == col_2)
+			{
+				cipher_text += playfair_matrix[(row_1+1) % 5][col_1];
+	      cipher_text += playfair_matrix[(row_2+1) % 5][col_2];
+			}
+			else
+			{
+				cipher_text += playfair_matrix[row_1][col_2];
+				cipher_text += playfair_matrix[row_2][col_1];
+			}
 		}
 /*----------------------------------------end plaintext to ciphertext conversion via matrix---------------------------------*/
-		//return cipher_text;
+		return cipher_text;
 }
 
 /**
@@ -295,67 +325,143 @@ string Playfair::encrypt(const string& plaintext)
 string Playfair::decrypt(const string& cipherText)
 {
 
-		int x_1 = 0, y_1 = 0, x_2 = 0, y_2 = 0;
-		int search_row = 0, search_column = 0;
-		string plain_text = "";
+	vector<string> reformatted_plaintext;
+	string placeholder = "";
 
-		for(int cipher_text_index = 0; cipher_text_index < cipherText.size(); cipher_text_index++)
+	for(int plaintext_index = 0; plaintext_index < cipherText.length(); plaintext_index++)
+	{
+		if(placeholder.length() % 2 == 0)
 		{
-
-				//for odd index to represent the end of the block
-				if(cipher_text_index % 2 == 0)
-				{
-
-						if(playfair_matrix[search_row][search_column].compare(cipherText.substr(cipher_text_index,cipher_text_index+1)) == 0)
-						{
-								x_1 = search_row;
-								y_1 = search_column;
-						}
-						else
-						{
-								if(search_column == 5)
-								{
-										search_column = 0;
-										search_row++;
-								}
-								if(search_column < 5)
-								{
-										search_column++;
-								}
-						}
-				}
-
-				search_row = 0;
-				search_column = 0;
-
-				//for even index to represent the end of the block
-				if(cipher_text_index % 2 == 1)
-				{
-						if(playfair_matrix[search_row][search_column].compare(cipherText.substr(cipher_text_index,cipher_text_index+1)))
-						{
-								x_2 = search_row;
-								y_2 = search_column;
-						}
-						else
-						{
-								if(search_column == 5)
-								{
-										search_column = 0;
-										search_row++;
-								}
-								if(search_column < 5)
-								{
-										search_column++;
-								}
-						}
-				}
-
-				search_row = 0;
-				search_column = 0;
-
-				plain_text.append(playfair_matrix[x_2][y_1]);
-				plain_text.append(playfair_matrix[x_1][y_2]);
+			if(cipherText.substr(plaintext_index, 3).compare("i/j") == 0)
+			{
+				placeholder += "i";
+				plaintext_index += 2;
+			}
+			else
+				placeholder += cipherText[plaintext_index];
 		}
 
-		return plain_text;
+		//checks to see if the 2nd letter in the plaintext is a duplicate of the previous letter
+		else
+		{
+			if(cipherText.substr(plaintext_index, 3).compare("i/j") == 0)
+			{
+				if(cipherText[plaintext_index] == cipherText[plaintext_index - 1])
+				{
+						//if duplicate letters in a sequence, turn 2nd letter into x and adds it to reformatted_plaintext
+						placeholder.append("x");
+						reformatted_plaintext.push_back(placeholder);
+
+						//next clear placeholder and append the original
+						placeholder = "";
+						placeholder += "i";
+						plaintext_index += 2;
+				}
+
+				else
+					placeholder += "i";
+					plaintext_index += 2;
+			}
+
+			else
+			{
+				if(cipherText[plaintext_index] == cipherText[plaintext_index - 1])
+				{
+						//if duplicate letters in a sequence, turn 2nd letter into x and adds it to reformatted_plaintext
+						placeholder.append("x");
+						reformatted_plaintext.push_back(placeholder);
+
+						//next clear placeholder and append the original
+						placeholder = "";
+						placeholder += cipherText[plaintext_index];
+				}
+
+				else
+				{
+					placeholder += cipherText[plaintext_index];
+					reformatted_plaintext.push_back(placeholder);
+					placeholder = "";
+				}
+			}
+		}
+	}
+
+	//checks to see if the length of the plaintext is even or no_dup_key_index, if it's odd add an x to the end
+	if(placeholder.length() % 2 == 1)
+	{
+		placeholder.append("x");
+		reformatted_plaintext.push_back(placeholder);
+	}
+
+	int row_1 = 0, col_1 = 0, row_2 = 0, col_2 = 0;
+	string plaintext = "";
+
+	for(int vector_index = 0; vector_index < reformatted_plaintext.size(); vector_index++)
+	{
+		for(int mRow = 0; mRow < 5; ++mRow)
+		{
+			for(int mCol = 0; mCol < 5; ++mCol)
+			{
+				if(playfair_matrix[mRow][mCol].compare("i/j") == 0)
+				{
+					if(reformatted_plaintext[vector_index][0] == 'i' || reformatted_plaintext[vector_index][0] == 'j')
+					{
+						row_1 = mRow;
+						col_1 = mCol;
+					}
+				}
+
+				else if(playfair_matrix[mRow][mCol].compare(reformatted_plaintext[vector_index].substr(0,1)) == 0)
+				{
+						row_1 = mRow;
+						col_1 = mCol;
+				}
+			}
+		}
+
+		//searches for the location of the second character of the block in the matrix
+		for(int mRow = 0; mRow < 5; ++mRow)
+		{
+			for(int mCol = 0; mCol < 5; ++mCol)
+			{
+
+				if(playfair_matrix[mRow][mCol].compare("i/j") == 0)
+				{
+					if(reformatted_plaintext[vector_index][1] == 'i' || reformatted_plaintext[vector_index][1] == 'j')
+					{
+						row_2 = mRow;
+						col_2 = mCol;
+					}
+				}
+
+				else if(playfair_matrix[mRow][mCol].compare(reformatted_plaintext[vector_index].substr(1)) == 0)
+				{
+						row_2 = mRow;
+						col_2 = mCol;
+				}
+			}
+		}
+
+		//If both letters fall into the same ROW
+		if(row_1 == row_2)
+		{
+			plaintext += playfair_matrix[row_1][(5 + col_1-1) % 5];
+			plaintext += playfair_matrix[row_2][(5 + col_2-1) % 5];
+		}
+
+		//If both letters fall into the same COL
+		else if(col_1 == col_2)
+		{
+			plaintext += playfair_matrix[(5 + row_1-1) % 5][col_1];
+			plaintext += playfair_matrix[(5 + row_2-1) % 5][col_2];
+		}
+
+		else
+		{
+			plaintext += playfair_matrix[row_1][col_2];
+			plaintext += playfair_matrix[row_2][col_1];
+		}
+	}
+
+	return plaintext;
 }
