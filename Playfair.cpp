@@ -1,4 +1,5 @@
 #include "Playfair.h"
+#include <iostream>
 
 
 /**
@@ -15,7 +16,10 @@ bool Playfair::setKey(const string& key)
   		{
 	    return false;
 	  	}
-}
+	}
+
+	cipherKey = key;
+	set_matrix(cipherKey);
 
 	return true;
 }
@@ -25,7 +29,10 @@ bool Playfair::setKey(const string& key)
 void Playfair::set_matrix(const string& key)
 {
 	string no_dup_key = "";
-	vector<string> letter_list;
+	bool dup = false;
+	string matrix[5][5];
+	int row = 0, col = 0;
+	string alphabet = "abcdefghijklmnopqrstuvwxyz";
 
 	//converts all characters to lowercase
 	for(int lowercase_index; lowercase_index < key.length(); lowercase_index++)
@@ -34,140 +41,130 @@ void Playfair::set_matrix(const string& key)
 	}
 
 	//removes duplicates from the key and puts it into no_dup_key
-	for(int key_index = 0; key_index < key.length(); key_index++)
+	for(int keyIndex = 0; keyIndex < key.length(); ++keyIndex)
 	{
-			if(letter_list.empty())
+		dup = false;
+		for(int dupKeyI = 0; dupKeyI < no_dup_key.length(); ++dupKeyI)
+		{
+			if(key[keyIndex] == no_dup_key[dupKeyI])
 			{
-					no_dup_key += key[key_index];
+				dup = true;
 			}
+		}
 
-			for(int letter_list_index = 0; letter_list_index < letter_list.size(); letter_list_index++)
-			{
-					//if the current letter at the key is in the list index, it stops iterating through the list index
-					if(key.substr(key_index,key_index+1).compare(letter_list[letter_list_index]) == 0)
-					{
-						break;
-					}
-					else
-					{
-						no_dup_key += key[key_index];
-					}
-			}
+		if(!dup)
+		{
+			no_dup_key += key[keyIndex];
+		}
 	}
 
-	string matrix[5][5];
-	int x = 0, y = 0;
-	string alphabet = "abcdefghijklmnopqrstuvwxyz";
 
-	//for each character no no_dup_key (key with duplicates removed), begins to add it to the playfair matrix
+	//for each character in no_dup_key (key with duplicates removed), begins to add it to the playfair matrix
 	for(int no_dup_key_index = 0; no_dup_key_index < no_dup_key.length(); no_dup_key_index++)
 	{
-			//if there is space in the current row of the matrix, populates it column by column
-			if(x < 5)
-			{
-					//accounts for i/j case
-					if(no_dup_key[no_dup_key_index] == 'i' || no_dup_key[no_dup_key_index] == 'i')
-					{
-							matrix[x][y] = "i/j";
-							x++;
-
-							alphabet.erase(alphabet.find("i", 1));
-							alphabet.erase(alphabet.find("j", 1));
-
-							continue;
-					}
-
-					matrix[x][y] = no_dup_key[no_dup_key_index];
-					x++;
-
-					//removes character appended to the matrix from the alphabet
-					alphabet.erase(alphabet.find(no_dup_key[no_dup_key_index]));
-			}
-
-			//if there is no space in the current row of the matrix, moves down one row, resets the column index
-			if(x == 5)
-			{
-					//accounts for i/j case
-					if(no_dup_key[no_dup_key_index] == 'i' || no_dup_key[no_dup_key_index] == 'i')
-					{
-							matrix[x][y] = "i/j";
-							y++;
-							x = 0;
-
-							alphabet.erase(alphabet.find("i", 1));
-							alphabet.erase(alphabet.find("j", 1));
-
-							continue;
-					}
-
-					matrix[x][y] = no_dup_key[no_dup_key_index];
-					y++;
-					x = 0;
-
-					//removes character appended to the matrix from the alphabet
-					alphabet.erase(alphabet.find(no_dup_key[no_dup_key_index]));
-			}
-		}
-
-		//start filling in rest of the matrix via alphabet
-		for(int alphabet_index = 0; alphabet_index < alphabet.length(); alphabet_index++)
+		//if there is space in the current row of the matrix, populates it column by column
+		if(col < 5)
 		{
-				if(x < 5)
-				{
-						//accounts for i/j case
-						if(alphabet[alphabet_index] == 'i' || alphabet[alphabet_index] == 'j')
-						{
-								matrix[x][y] = "i/j";
-								x++;
+			//accounts for i/j case
+			if(no_dup_key[no_dup_key_index] == 'i' || no_dup_key[no_dup_key_index] == 'j')
+			{
+					matrix[row][col] = "i/j";
+					col++;
 
-								alphabet.erase(alphabet.find("i", 1));
-								alphabet.erase(alphabet.find("j", 1));
+					alphabet.erase(alphabet.find("i"), 1);
+					alphabet.erase(alphabet.find("j"), 1);
+			}
 
-								continue;
-						}
+			else
+			{
+				matrix[row][col] = no_dup_key[no_dup_key_index];
+				col++;
 
-						matrix[x][y] = alphabet[alphabet_index];
-						x++;
-
-						alphabet.erase(alphabet.find(alphabet[alphabet_index]));
-				}
-
-				if(x == 5)
-				{
-						//accounts for i/j case
-						if(alphabet[alphabet_index] == 'i' || alphabet[alphabet_index] == 'j')
-						{
-								matrix[x][y] = "i/j";
-								y++;
-								x = 0;
-
-								alphabet.erase(alphabet.find("i", 1));
-								alphabet.erase(alphabet.find("j", 1));
-
-								continue;
-						}
-
-						matrix[x][y] = alphabet[alphabet_index];
-						y++;
-						x = 0;
-
-						//removes character appended to the matrix from the alphabet
-						alphabet.erase(alphabet.find(alphabet[alphabet_index]));
-				}
-
+				//removes character appended to the matrix from the alphabet
+				alphabet.erase(alphabet.find(no_dup_key[no_dup_key_index]),1);
+			}
 		}
 
-		copy(&playfair_matrix[0][0], &playfair_matrix[0][0] + 5 * 5, &matrix[0][0]);
+		//if there is no space in the current row of the matrix, moves down one row, resets the column index
+		else
+		{
+			row++;
+			col = 0;
+
+			//accounts for i/j case
+			if(no_dup_key[no_dup_key_index] == 'i' || no_dup_key[no_dup_key_index] == 'j')
+			{
+					matrix[row][col] = "i/j";
+					col++;
+
+					alphabet.erase(alphabet.find("i", 1));
+					alphabet.erase(alphabet.find("j", 1));
+			}
+
+			else
+			{
+				matrix[row][col] = no_dup_key[no_dup_key_index];
+				col++;
+
+				//removes character appended to the matrix from the alphabet
+				alphabet.erase(alphabet.find(no_dup_key[no_dup_key_index]), 1);
+			}
+		}
+	}
+
+	//start filling in rest of the matrix via alphabet
+	while(alphabet.length() > 0)
+	{
+		if(col < 5)
+		{
+			//accounts for i/j case
+			if(alphabet[0] == 'i' || alphabet[0] == 'j')
+			{
+				matrix[row][col] = "i/j";
+				col++;
+
+				alphabet.erase(alphabet.find("i", 1));
+				alphabet.erase(alphabet.find("j", 1));
+			}
+
+			else
+			{
+				matrix[row][col] = alphabet[0];
+				col++;
+
+				alphabet.erase(alphabet.find(alphabet[0]),1);
+			}
+		}
+
+		//if there is no space in the current row of the matrix, moves down one row, resets the column index
+		else
+		{
+			row++;
+			col = 0;
+
+			//accounts for i/j case
+			if(alphabet[0] == 'i' || alphabet[0] == 'j')
+			{
+					matrix[row][col] = "i/j";
+					col++;
+
+					alphabet.erase(alphabet.find("i", 1));
+					alphabet.erase(alphabet.find("j", 1));
+			}
+
+			else
+			{
+				matrix[row][col] = alphabet[0];
+				col++;
+			}
+
+			//removes character appended to the matrix from the alphabet
+			alphabet.erase(alphabet.find(alphabet[0]),1);
+		}
+	}
+
+	copy(&playfair_matrix[0][0], &playfair_matrix[0][0] + 5 * 5, &matrix[0][0]);
 }
-
-/*
-returns the playfair_matrix public data member of playfair class
-*/
-/*string Playfair::**get_matrix()
-{
-		return playfair_matrix;
-}*/
-
 
 /**
  * Encrypts a plaintext string
@@ -182,16 +179,18 @@ string Playfair::encrypt(const string& plaintext)
 		vector<string> reformatted_plaintext;
 		string placeholder = "";
 
+		// ee
+
 		for(int plaintext_index = 0; plaintext_index < plaintext.length(); plaintext_index++)
 		{
 
-				if(plaintext_index % 2 == 0)
+				if(placeholder.length() % 2 == 0)
 				{
 						placeholder += plaintext[plaintext_index];
 				}
 
 				//checks to see if the 2nd letter in the plaintext is a duplicate of the previous letter
-				if(plaintext_index % 2 == 1)
+				else
 				{
 						if(plaintext[plaintext_index] == plaintext[plaintext_index - 1])
 						{
@@ -203,20 +202,34 @@ string Playfair::encrypt(const string& plaintext)
 								placeholder = "";
 								placeholder += plaintext[plaintext_index];
 						}
+
+						else
+						{
+							placeholder += plaintext[plaintext_index];
+							reformatted_plaintext.push_back(placeholder);
+							placeholder = "";
+						}
 				}
 		}
 
 		//checks to see if the length of the plaintext is even or no_dup_key_index, if it's odd add an x to the end
-		if(plaintext.length() % 2 == 1)
+		if(placeholder.length() % 2 == 1)
 		{
 			placeholder.append("x");
 			reformatted_plaintext.push_back(placeholder);
 		}
 
+		for(int x = 0; x < reformatted_plaintext.size(); ++x)
+		{
+			cout << reformatted_plaintext[x] << endl;
+		}
+
+		return "";
+
 /*--------------------------------------end converts the plaintext into 2 char chunks---------------------------------------*/
 
 /*--------------------------------------start plaintext to ciphertext conversion via matrix---------------------------------*/
-
+/*
 		int x_1 = 0, y_1 = 0, x_2 = 0, y_2 = 0;
 		int search_row = 0, search_column = 0;
 		string cipher_text = "";
@@ -271,7 +284,7 @@ string Playfair::encrypt(const string& plaintext)
 				cipher_text += playfair_matrix[x_1][y_2];
 		}
 /*----------------------------------------end plaintext to ciphertext conversion via matrix---------------------------------*/
-		return cipher_text;
+		//return cipher_text;
 }
 
 /**

@@ -21,7 +21,7 @@ class Playfair: public CipherInterface
 	/** The public members **/
 	public:
 
-		std::string key;
+		std::string cipherKey;
 		std::string playfair_matrix[5][5];
 
 		/**
@@ -36,11 +36,6 @@ class Playfair: public CipherInterface
 		*/
 
 		virtual void set_matrix(const string& key);
-
-		/*
-		returns the playfair_matrix
-		*/
-		//virtual string** get_matrix();
 
 		/**
 		 * Encrypts a plaintext string
