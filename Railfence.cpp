@@ -78,7 +78,7 @@ string Railfence::decrypt(const string& cipherText)
 	
 	for (int i=0; i < cipherText.length(); i++){
 		// mark spaces that should hold text with a placeholder
-		railMatrix[row][col] = '*';
+		railMatrix[row][col++] = '*';
 
 		// if we just filled the top or bottom row reverse direction
 		if(row == 0 || row == cipherKey-1)
