@@ -25,7 +25,7 @@ class Railfence: public CipherInterface
 		 * @param key - the key to use
 		 * @return - True if the key is valid and False otherwise
 		 */
-		virtual bool setKey(const string& key);
+		virtual bool setKey(const int& key);
 
 		/**
 		 * Encrypts a plaintext string
@@ -49,6 +49,12 @@ class Railfence: public CipherInterface
 
 		/* The protected members */
 	protected:
+		int cipherKey = 0, 
+		row = 0, 
+		col = 0, 
+		direction=-1,
+		index = 0;
+
 
 
 };
