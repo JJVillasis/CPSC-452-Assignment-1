@@ -53,25 +53,21 @@ int main(int argc, char** argv)
 	if(cipherName == "PLF")
 	{
 		cipher = new Playfair();
-		cipher->setKey(key);
 	}
 	//If the cipher is Railfence
 	else if(cipherName == "RFC")
 	{
 		cipher = new Railfence();
-		cipher->setKey(key);
 	}
 	//If the cipher is Vigenere
 	else if(cipherName == "VIG")
 	{
 		cipher = new Vigenere();
-		cipher->setKey(key);
 	}
 	//If the cipher is Caesar
 	else if(cipherName == "CES")
 	{
 		cipher = new Caesar();
-		cipher->setKey(key);
 	}
 	//If the cipher is unknown/unimplemented
 	else
@@ -83,18 +79,24 @@ int main(int argc, char** argv)
 
 	//// Performing the Encryption/Decryption ////
 
+	//Set key for cipher
+	if(!cipher->setKey(key))
+	{
+		cout << "Key \'" << key << "\' not a vaild key for cipher \"" << cipherName << "\".\n";
+		exit(1);
+	}
+
 	//Encryption process
 	if(encDec == "ENC")
 	{
 		string ciphertext = cipher->encrypt(inputText);
-		out << ciphertext;
-
+		out << ciphertext << endl;
 	}
 	//Decryption process
 	else if(encDec == "DEC")
 	{
 		string plaintext = cipher->decrypt(inputText);
-		out << plaintext;
+		out << plaintext << endl;
 	}
 	//Unknown process
 	else
