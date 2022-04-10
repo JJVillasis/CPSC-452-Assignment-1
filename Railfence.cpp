@@ -6,14 +6,21 @@
  * @param key - the key to use
  * @return - True if the key is valid and False otherwise
  */
-bool Railfence::setKey(const int& key)
+bool Railfence::setKey(const string& key)
 {
-	if (key <= 0)
+
+
+	for(int x = 0; x < key.length(); x++)
+			if(isalpha(key[x]))
+				return false;
+
+	cipherKey = stoi(key);
+
+	if (cipherKey <= 0)
 		return false;
 	else
 		return true;
 }
-
 
 
 
