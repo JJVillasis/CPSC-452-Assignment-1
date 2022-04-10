@@ -24,6 +24,7 @@ bool Railfence::setKey(const string& key)
 
 
 
+
 /**
  * Encrypts a plaintext string
  * @param plaintext - the plaintext string
@@ -50,8 +51,6 @@ string Railfence::encrypt(const string& plaintext)
 		// move onto next row
 		row = row + direction;
 	}
-	row = col = 0;
-	direction = -1;
 
 	string result;
 	for (int i=0; i < cipherKey; i++)
